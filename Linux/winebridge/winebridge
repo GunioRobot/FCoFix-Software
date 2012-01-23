@@ -1,0 +1,75 @@
+#!/bin/bash
+PID="/home/`whoami`/.wine/drive_c/users/`whoami`/Temp/winebridge_ppid"
+LOCK="/home/`whoami`/.wine/drive_c/users/`whoami`/Temp/winebridge_lock"
+STDIN="/home/`whoami`/.wine/drive_c/users/`whoami`/Temp/winebridge_in"
+STDOUT="/home/`whoami`/.wine/drive_c/users/`whoami`/Temp/winebridge_out"
+VERSION="1.0.0"
+
+
+Get_Error() {
+	case $1 in
+		127) echo ">E127: Command Not Found. Remember: Linux commands are case sensitive!" >> $STDOUT ;;
+		2) echo ">E002: Syntax Error" >> $STDOUT ;;
+		1) echo ">E001: Program Executed. Program returned that it failed." >> $STDOUT ;;
+		0) echo ">E000: Unable to delete file for next use!" >> $STDOUT ;;
+		*) echo ">E$1: Undefined Error" >> $STDOUT ;;
+	esac
+}
+
+Help() {
+	echo "Usage: winebridge [parameters]"
+	echo
+	echo "Parameters:"
+	echo " -h         --help             Display this help. Must be before other parameters."
+	echo " -k         --kill             Kills running winebridge instance."
+	echo
+	echo "Script Requirements:"
+	echo " These are not currently checked for. I may add automatic checking in a later version."
+	echo " It is the responibility of the user to ensure that the requirements of this script are"
+	echo " installed on the system. You can check if these are installed using 'whereis'."
+	echo
+	echo " bash       /bin/bash          Enviroment that this script runs under."
+	echo " chmod      /bin/chmod         Changes file permissions."
+	echo " clear      /usr/bin/clear     Clears the Screen."
+	echo " echo       /bin/echo          Displays text."
+	echo " kill       /bin/kill          Kills running winebridge instance."
+	echo " rm         /bin/rm            Deletes files for next use."
+	echo " sleep      /bin/sleep         Prevents the cpu from being at 100% constantly."
+	echo
+	echo "Bug reporting:"
+	echo " This script SHOULD BE bug free. If problems occur check your command line entry and"
+	echo " check script requirements. If problems still occur please visit our github."
+	echo
+	echo "winebridge $version - FCoFix - Robert C. Maehl"
+}
+
+Kill() {
+	if [[ -e $PID ]]; then
+		kill -9 `cat $PID`
+		rm -rf $PID
+	else
+		echo "WineBridge not running."
+	fi
+}
+
+Loop() {
+	echo $PPID >> $PID
+	while sleep 0.1; do
+		if [[ -e $STDIN ]]; then
+			clear
+			chmod +x $STDIN
+			echo >> $LOCK
+			$STDIN >> $STDOUT || Get_Error $?
+			rm -rf $LOCK $STDIN || Get_Error 0
+		fi
+	done
+}
+
+while [[ $1 == -* ]]; do
+	case "$1" in
+		-h|--help) Help; exit 0;;
+		-k|--kill) Kill; exit 0;;
+		-*) echo "Invalid parameter: $1" 1>&2; exit 1;;
+	esac
+done
+Loop

@@ -1,12 +1,15 @@
 Installation Instructions:
 
-For /Linux/alarmclock:
-1. Import everything into /usr/local/bin
+Please download from Downloads tab!
+
+For alarmclock.zip:
+1. Extract everything into /usr/local/bin
 2. Execute "chmod +x" on the alarmclock file
 
-For /Linux/winebridge:
-1. Import everything into /usr/local/bin EXCEPT winebridge-setup.exe
+For winebridge.zip:
+1. Extract everything into /usr/local/bin
 2. Execute "chmod +x" on the winebridge file
 3. Execute "chmod +x" on the winebridge-setup.exe file
 4. Execute the winebridge-setup.exe file
-5. Add winebridge to your startup applicatons
+5. Delete the winebridge-setup.exe file once it has installed
+6. Add winebridge to your startup applicatons
